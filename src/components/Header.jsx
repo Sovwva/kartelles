@@ -5,8 +5,10 @@ import reg from "../assets/img/registration.png"
 import profile from "../assets/img/profile.png"
 import cart from "../assets/img/cart.png"
 
+import {Link} from "react-router-dom";
+
 function Header() {
-    const isLoggedIn = true; // Здесь вы должны использовать фактическую логику для определения, вошел ли пользователь в систему
+    const isLoggedIn = false; // Здесь вы должны использовать фактическую логику для определения, вошел ли пользователь в систему
 
     return (
             <div className="header">
@@ -15,30 +17,33 @@ function Header() {
                     <span className={"nav-label"}>Kartelles</span>
                 </div>
                 <div className="nav-links">
-                    <div className={"nav-item"}>
+                    <Link to={"/"} className={"nav-item"}>
                         <img src={home} alt="Home" className="img" />
                         <span className="nav-label">Home</span>
-                    </div>
+                    </Link>
                 {isLoggedIn ? (
                     <>
-                        <div className={"nav-item"}>
-                            <img src={reg} alt={"reg"} className={"img"}/>
-                            <span className="nav-label">log out</span>
-                        </div>
-                        <div className={"nav-item"}>
+                        <Link to={"/error"} className={"nav-item"}>
+                                <img src={reg} alt={"reg"} className={"img"}/>
+                                <span className="nav-label">log out</span>
+                        </Link>
+
+                        <Link to={"/profile"} className={"nav-item"}>
                             <img src={profile} alt={"profile"} className={"img"}/>
                             <span className="nav-label">profile</span>
-                        </div>
-                        <div className={"nav-item"}>
+                        </Link>
+
+                        <Link to={"/cart"} className={"nav-item"}>
                             <img src={cart} alt={"cart"} className={"img"}/>
                             <span className="nav-label">Cart</span>
-                        </div>
+                        </Link>
+
                     </>
                 ) : (
-                    <div className="nav-item">
+                    <Link to={"/Registration"} className={"nav-item"}>
                         <img src={reg} alt={"registration"} className={"img"}/>
                         <span className="nav-label">Register</span>
-                    </div>
+                    </Link>
                 )}
                 </div>
             </div>
