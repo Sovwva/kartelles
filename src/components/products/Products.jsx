@@ -24,7 +24,7 @@ const Products = ({ productType }) => {
             const token = localStorage.getItem('accessToken'); // Получение токена из локального хранилища
             const response = await axios.get(BaseUrlLot + endpointMapping[productType], {
                 headers: {
-                    Authorization: `Bearer ${token}` // Передача токена в заголовке запроса
+                    Authorization: `${token}` // Передача токена в заголовке запроса
                 }
             });
             setProductsData(response.data);

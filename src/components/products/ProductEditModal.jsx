@@ -12,7 +12,7 @@ function ProductEditModal({ product, closeModal }) {
                 description,
             }, {
                 headers: {
-                    Authorization: `Bearer ${token}` // Передача токена в заголовке запроса
+                    Authorization: `${token}` // Передача токена в заголовке запроса
                 }
             });
             console.log(response.data); // Обработайте успешный ответ от сервера по необходимости

@@ -22,7 +22,7 @@ const Cart = () => {
 
                 const response = await fetch(url, {
                     headers: {
-                        Authorization: `Bearer ${token}`,
+                        Authorization: `${token}`,
                     },
                 });
 
@@ -63,7 +63,7 @@ const Cart = () => {
 
             const response = await fetch(url, {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `${token}`,
                 },
             });
 

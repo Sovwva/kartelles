@@ -13,7 +13,7 @@ function Header() {
     const accessToken = localStorage.getItem('accessToken');
 
     const handleLogout = async () => {
-        if (accessToken === 'test') {
+        if (accessToken === 'testAccsesToken') {
             localStorage.removeItem('accessToken')
             window.location.reload()
         }
@@ -21,7 +21,7 @@ function Header() {
             const response = await fetch(BaseUrlUser + '/api/user/logout', {
                 method: 'GET',
                 headers: {
-                    Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+                    Authorization: `${localStorage.getItem('accessToken')}`,
                 },
             });
 

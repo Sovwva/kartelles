@@ -52,12 +52,12 @@ function Reg_Form() {
                 </label>
                 <label>
                     First name
-                    <input type="text" {...register("firstname", { required: true })} />
+                    <input type="text" {...register("firstName", { required: true })} />
                     <div className="error">{errors?.firstname && <p>Error!</p>}</div>
                 </label>
                 <label>
                     Last Name
-                    <input type="text" {...register("lastname", { required: true })} />
+                    <input type="text" {...register("lastName", { required: true })} />
                     <div className="error">{errors?.lastname && <p>Error!</p>}</div>
                 </label>
                 <input type="submit" />

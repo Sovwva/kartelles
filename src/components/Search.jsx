@@ -15,7 +15,7 @@ const Search = () => {
 
             const response = await fetch(`${BaseUrlLot}/api/auction?search=${searchTerm}`, {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `${token}`,
                 },
             });
 

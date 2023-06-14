@@ -21,7 +21,7 @@ function EditProfileForm() {
         try {
             const token = getToken();
             const config = {
-                headers: { Authorization: `Bearer ${token}` }
+                headers: { Authorization: `${token}` }
             };
 
             // Отправка запроса на сервер с обновленными данными профиля
@@ -52,7 +52,7 @@ function EditProfileForm() {
     const handleDeleteUser = () => {
         const token = getToken();
         const config = {
-            headers: { Authorization: `Bearer ${token}` }
+            headers: { Authorization: `${token}` }
         };
 
         axios.delete('/api/user', config)
