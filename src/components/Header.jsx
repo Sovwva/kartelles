@@ -7,37 +7,39 @@ import cart from "../assets/img/cart.png";
 
 import { Link } from "react-router-dom";
 import {BaseUrlUser} from "../config";
+import axios from "axios";
+import error from "../pages/error";
 
 function Header() {
     const isLoggedIn = localStorage.getItem('accessToken') !== null;
     const accessToken = localStorage.getItem('accessToken');
 
     const handleLogout = async () => {
-        if (accessToken === 'testAccsesToken') {
-            localStorage.removeItem('accessToken')
-            window.location.reload()
-        }
         try {
-            const response = await fetch(BaseUrlUser + '/api/user/logout', {
-                method: 'GET',
-                headers: {
-                    Authorization: `${localStorage.getItem('accessToken')}`,
-                },
-            });
 
-            if (response.ok) {
-                localStorage.removeItem('accessToken');
-                // Add any additional logic after successful logout
-                console.log('User logged out successfully');
-                window.location.reload()
-            } else {
-                const errorMessage = await response.json();
-                throw new Error(errorMessage.message || 'Failed to logout');
-            }
-        } catch (error) {
-            console.error(error);
+            const logOut = await axios.get(
+                BaseUrlUser+'/api/user/logout',
+                accessToken, {
+                headers: {
+                    Authorization: `Bearer' + ${accessToken}`
+                }
         }
-    };
+            ).then(response => {
+                if (response.status === 200) {
+                    localStorage.removeItem('accessToken')
+                    console.log('User logged out successfully');
+                    window.location.reload()
+                }
+                else {
+                    console.error(error)
+                }
+            })
+
+            logOut()
+        } catch {
+            console.error(error)
+        }
+    }
 
     return (
         <div className="header">
@@ -68,7 +70,7 @@ function Header() {
                         </Link>
                     </>
                 ) : (
-                    <Link to={"/login"} className={"nav-item"}>
+                    <Link to={"/Login"} className={"nav-item"}>
                         <img src={reg} alt={"login"} className={"img"} />
                         <span className="nav-label">login</span>
                     </Link>

@@ -35,7 +35,7 @@ function NewAuctionForm() {
 
             console.log('Image uploaded:', uploadImageResponse.data);
 
-            reset(); // Очистка формы после успешной отправки
+            reset();
         } catch (error) {
             console.error(error);
         }

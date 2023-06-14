@@ -13,7 +13,6 @@ function EditProfileForm() {
 
     const handleEditProfileSubmit = async (data) => {
         if (Object.keys(errors).length > 0) {
-            // Если есть ошибки валидации, отказываем в обновлении
             console.log('Validation error. Please fill in all fields.');
             return;
         }
@@ -23,16 +22,10 @@ function EditProfileForm() {
             const config = {
                 headers: { Authorization: `${token}` }
             };
-
-            // Отправка запроса на сервер с обновленными данными профиля
             const response = await axios.put('/api/user', data, config);
-            console.log(response.data); // Обработка успешного обновления профиля
-
-            // Дополнительные действия после успешного обновления профиля
-            // Например, обновление состояния компонента или отображение сообщения об успешном обновлении
+            console.log(response.data);
         } catch (error) {
-            console.error(error); // Обработка ошибок при редактировании профиля
-            // Дополнительные действия при возникновении ошибки, например, отображение сообщения об ошибке
+            console.error(error);
         }
     };
 
@@ -57,10 +50,10 @@ function EditProfileForm() {
 
         axios.delete('/api/user', config)
             .then(response => {
-                console.log(response.data); // Обработка успешного удаления пользователя
+                console.log(response.data);
             })
             .catch(error => {
-                console.error(error); // Обработка ошибок
+                console.error(error);
             });
     };
 

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import "./Reg_Form.css"; // Подключаем CSS файл
 import { BaseUrlUser } from "../../config";
+import {Navigate} from "react-router-dom";
+import axios from "axios";
 
 function Reg_Form() {
     const {
@@ -11,28 +13,33 @@ function Reg_Form() {
     } = useForm();
     const [error, setError] = useState(null);
 
-    const onSubmit = (data) => {
-        alert(JSON.stringify(data));
-        console.log(data);
-        fetch(BaseUrlUser + "/api/user/create", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-        })
-            .then((response) => response.json())
-            .then((result) => {
-                if (result.ok) {
-                    // Действия при успешной регистрации
-                } else {
-                    setError(result.message);
+    const onSubmit = async (data) => {
+        try {
+            const RegData = {
+                login: data.login,
+                password: data.password,
+                firstName: data.firstName,
+                lastName: data.lastName
+            }
+
+            const RegResponse = await axios.post(
+                BaseUrlUser + "api/user/create",
+                RegData
+            ).then(response=> {
+                if (response.status === 200) {
+                    <Navigate to={"/login"}/>
                 }
+                else {
+                    console.error(error)
+                }
+
+                RegResponse()
             })
-            .catch((error) => {
-                console.error("Error:", error);
-                setError("An error occurred. Please try again later.");
-            });
+
+
+        } catch (error) {
+            console.error(error)
+        }
     };
 
     return (

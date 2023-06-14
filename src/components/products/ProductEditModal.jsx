@@ -39,5 +39,7 @@ function ProductEditModal({ product, closeModal }) {
         </div>
     );
 }
+{
+}
 
 export default ProductEditModal;

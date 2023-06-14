@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import {Link, Navigate, useNavigate} from 'react-router-dom';
 import './Log_Form.css';
 import { BaseUrlUser } from '../../config';
+import axios from "axios";
 
 function Log_Form() {
     const [error, setError] = useState(null);
@@ -10,64 +11,63 @@ function Log_Form() {
 
     const {
         register,
-        formState: { errors },
+        formState: {errors},
         handleSubmit,
     } = useForm();
 
-    const onSubmit = (data) => {
-        const { login, password } = data;
-        if (login === 'test@test' && password === 'test') {
-            localStorage.setItem('accessToken', 'testAccessToken');
-            setIsLoggedIn(true);
-        } else {
-            fetch(BaseUrlUser + '/api/user/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            })
-                .then((response) => response.json())
-                .then((result) => {
-                    if (result.ok) {
-                        localStorage.setItem('accessToken', result.accessToken);
-                        setIsLoggedIn(true);
-                    } else {
-                        setError('Failed to receive access token');
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                    setError('An error occurred. Please try again later.');
-                });
-        }
-    };
+    const onSubmit = async (data) => {
+        try {
 
-    if (isLoggedIn) {
-        window.location.reload()
-        return <Navigate to={"/"}/>
+            const LogData = {
+                login: data.login,
+                password: data.password
+            }
+
+            const loginResponse = await axios.post(
+                BaseUrlUser + '/api/user/login',
+                LogData
+            ).then(response => {
+                if (response.status === 200) {
+                    window.location.reload();
+                    <Navigate to={"/"}/>
+                } else {
+                    setError(response.request)
+                    console.error(error)
+                }
+                const accessToken = loginResponse.data.accessToken
+                localStorage.setItem('accessToken', accessToken);
+                setIsLoggedIn(true);
+            })
+        } catch (error) {
+            console.log(error)
+        }
     }
 
-    return (
-        <div className="input_form">
-            <h2>Login</h2>
-            {error && <p>{error}</p>}
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <label>
-                    Email
-                    <input type="email" {...register('login', { required: true })} />
-                    <div className="error">{errors?.login && <p>Error!</p>}</div>
-                </label>
-                <label>
-                    Password
-                    <input type="password" {...register('password', { required: true })} />
-                    <div className="error">{errors?.password && <p>Error!</p>}</div>
-                </label>
-                <input type="submit" value="Login" />
-            </form>
-            <Link to="/Registration">Register</Link>
-        </div>
-    );
+        if (isLoggedIn) {
+            window.location.reload()
+            return <Navigate to={"/"}/>
+        }
+
+        return (
+            <div className="input_form">
+                <h2>Login</h2>
+                {error && <p>{error}</p>}
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <label>
+                        Email
+                        <input type="email" {...register('login', {required: true})} />
+                        <div className="error">{errors?.login && <p>Error!</p>}</div>
+                    </label>
+                    <label>
+                        Password
+                        <input type="password" {...register('password', {required: true})} />
+                        <div className="error">{errors?.password && <p>Error!</p>}</div>
+                    </label>
+                    <input type="submit" value="Login"/>
+                </form>
+                <Link to="/Registration">Register</Link>
+            </div>
+        );
 }
 
 export default Log_Form;
