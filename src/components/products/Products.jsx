@@ -1,91 +1,93 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import ProductInfoModal from './ProductInfoModal';
+import ProductEditModal from './ProductEditModal';
 import { BaseUrlLot } from '../../config';
-import ProductTypeButtons from './ProductTypeButtons';
 
-const Products = ({ searchResults }) => {
-    const [products, setProducts] = useState([]);
-    const [error, setError] = useState(null);
-    const [productType, setProductType] = useState('all');
+const endpointMapping = {
+    'All Lots': '/api/auction',
+    'User Lots': '/api/auction/auth-user-auctions',
+    'Participated Lots': '/api/auction/auth-participant-auctions',
+    'Paid Lots': '/api/auction/auth-purchased-auctions',
+};
 
-    const productTypeUrls = {
-        all: `${BaseUrlLot}/api/auction`,
-        user: `${BaseUrlLot}/api/auction/auth-user-auctions`,
-        bidded: `${BaseUrlLot}/api/auction/auth-bidded-auctions`,
-        won: `${BaseUrlLot}/api/auction/auth-won-auctions`,
-        paid: `${BaseUrlLot}/api/auction/auth-purchased-auctions`,
+const Products = ({ productType }) => {
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [productsData, setProductsData] = useState([]);
+    const [isEditing, setIsEditing] = useState(false);
+    const [isOwned, setIsOwned] = useState(false);
+
+    const fetchData = async () => {
+        try {
+            console.log('Fetching data from server...');
+            const token = localStorage.getItem('accessToken'); // Получение токена из локального хранилища
+            const response = await axios.get(BaseUrlLot + endpointMapping[productType], {
+                headers: {
+                    Authorization: `Bearer ${token}` // Передача токена в заголовке запроса
+                }
+            });
+            setProductsData(response.data);
+            checkOwnership(productType);
+            console.log('Data fetched successfully:', response.data);
+        } catch (error) {
+            console.error('Error fetching lots:', error);
+        }
+    };
+
+    const openModal = (product) => {
+        setSelectedProduct(product);
+        setShowModal(true);
+    };
+
+    const closeModal = () => {
+        setSelectedProduct(null);
+        setShowModal(false);
+        setIsEditing(false);
+    };
+
+    const checkOwnership = (selectedType) => {
+        const isOwnedLots = selectedType === 'User Lots';
+        setIsOwned(isOwnedLots);
+    };
+
+    const handleEdit = (product) => {
+        setSelectedProduct(product);
+        setIsEditing(true);
     };
 
     useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                const token = localStorage.getItem('accessToken');
-                const url = productTypeUrls[productType];
-
-                const response = await fetch(url, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-
-                const contentType = response.headers.get('content-type');
-                if (contentType && contentType.indexOf('application/json') !== -1) {
-                    const data = await response.json();
-                    setProducts(data);
-                    setError(null);
-                } else {
-                    const errorMessage = await response.text();
-                    console.log(errorMessage);
-                    throw new Error('Server Error');
-                }
-            } catch (error) {
-                console.error(error);
-                setProducts([]);
-                setError('Failed to connect to the server. Please try again later.');
-            }
-        };
-
-        fetchProducts();
+        fetchData();
     }, [productType]);
 
-    useEffect(() => {
-        if (searchResults && searchResults.length > 0) {
-            const filteredProducts = products.filter((product) =>
-                searchResults.includes(product.id)
-            );
-            setProducts(filteredProducts);
-        }
-    }, [searchResults, products]);
 
-    const handleProductTypeChange = (type) => {
-        setProductType(type);
-    };
-
-    return (
-        <div className="products-container">
-            {error ? (
-                <p>{error}</p>
-            ) : (
-                <>
-                    <h2>Products</h2>
-                    {products.length > 0 ? (
-                        products.map((product) => (
-                            <div key={product.id} className="product-card">
-                                <img
-                                    src={product.image}
-                                    alt={product.name}
-                                    className="product-image"
-                                />
-                                <h3 className="product-name">{product.name}</h3>
-                                <p className="product-price">{product.price}</p>
-                            </div>
-                        ))
-                    ) : (
-                        <p>No products available</p>
-                    )}
-                </>
-            )}
-        </div>
-    );
+    if (isEditing) {
+        return (
+            <ProductEditModal product={selectedProduct} closeModal={closeModal} />
+        );
+    } else {
+        return (
+            <div>
+                <ul>
+                    {productsData.map((product) => (
+                        <li key={product.id} onClick={() => openModal(product)}>
+                            {product.name}
+                            {isOwned && (
+                                <button onClick={() => handleEdit(product)}>Edit</button>
+                            )}
+                        </li>
+                    ))}
+                </ul>
+                {showModal && (
+                    <ProductInfoModal
+                        product={selectedProduct}
+                        closeModal={closeModal}
+                        isOwned={isOwned}
+                    />
+                )}
+            </div>
+        );
+    }
 };
 
 export default Products;

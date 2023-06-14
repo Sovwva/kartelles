@@ -6,13 +6,19 @@ import profile from "../assets/img/profile.png";
 import cart from "../assets/img/cart.png";
 
 import { Link } from "react-router-dom";
+import {BaseUrlUser} from "../config";
 
 function Header() {
     const isLoggedIn = localStorage.getItem('accessToken') !== null;
+    const accessToken = localStorage.getItem('accessToken');
 
     const handleLogout = async () => {
+        if (accessToken === 'test') {
+            localStorage.removeItem('accessToken')
+            window.location.reload()
+        }
         try {
-            const response = await fetch('/api/user/logout', {
+            const response = await fetch(BaseUrlUser + '/api/user/logout', {
                 method: 'GET',
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -23,6 +29,7 @@ function Header() {
                 localStorage.removeItem('accessToken');
                 // Add any additional logic after successful logout
                 console.log('User logged out successfully');
+                window.location.reload()
             } else {
                 const errorMessage = await response.json();
                 throw new Error(errorMessage.message || 'Failed to logout');
@@ -45,7 +52,7 @@ function Header() {
                 </Link>
                 {isLoggedIn ? (
                     <>
-                        <button className={"nav-item"} onClick={handleLogout}>
+                        <button className={"nav-item"} onClick={handleLogout} >
                             <img src={reg} alt={"logout"} className={"img"} />
                             <span className="nav-label">logout</span>
                         </button>

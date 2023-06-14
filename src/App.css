@@ -18,6 +18,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   text-align: center;
 }
 
@@ -70,7 +71,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 80px;
+  width: 60px;
   height: 40px;
   border: none;
   border-radius: 5px;
@@ -88,6 +89,7 @@
   border: 1px solid #ccc;
   border-radius: 5px;
   padding: 10px;
+  cursor: pointer;
 }
 
 .product-image {
@@ -107,28 +109,114 @@
   font-size: 14px;
 }
 
-@media (max-width: 768px) {
-  .header {
-    padding: 5px;
-  }
+.navigation-container {
+  display: flex;
+}
 
-  .nav-item {
-    margin-right: 10px;
-  }
+.navigation-button {
+  padding: 10px;
+  background-color: #ccc;
+  border: none;
+  border-radius: 5px;
+  margin-right: 10px;
+  cursor: pointer;
+}
 
-  .search-container {
-    flex-direction: column;
-    align-items: stretch;
-  }
+.navigation-button:hover {
+  background-color: #bbb;
+}
 
-  .search-input {
-    width: 100%;
-    margin-bottom: 10px;
-  }
+.navigation-button.active {
+  background-color: #aaa;
+}
 
+.navigation-button.hover {
+  background-color: #ddd;
+}
 
+.product-type-buttons {
+  display: flex;
+  margin-top: 10px;
+}
 
-  .products-container {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  }
+.product-type-button {
+  padding: 5px;
+  background-color: #ccc;
+  border: none;
+  border-radius: 5px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.product-type-button:hover {
+  background-color: #bbb;
+}
+
+.product-type-button.active {
+  background-color: #aaa;
+}
+
+/* Добавленные стили для модального окна */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.modal-content {
+  margin-bottom: 20px;
+}
+
+button {
+  background-color: #333;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.button-red {
+  background-color: red;
+}
+
+.payment-page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.payment-instructions {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.payment-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #333;
+  color: #fff;
+  text-decoration: none;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.payment-button:hover {
+  background-color: #555;
 }
