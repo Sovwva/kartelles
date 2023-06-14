@@ -1,16 +1,13 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
-import {BaseUrlLot} from "../../config"; // Импортируем библиотеку Axios
+import { BaseUrlLot } from '../../config';
 
 function NewAuctionForm() {
     const { register, handleSubmit, setValue, reset } = useForm();
-    const token = localStorage.getItem('accessToken');
 
     const handleNewAuctionSubmit = async (data) => {
         try {
-            const token = localStorage.getItem('accessToken');
-
             // Отправка запроса на создание нового аукционного лота
             const auctionData = {
                 name: data.name,
@@ -19,12 +16,10 @@ function NewAuctionForm() {
                 lifeTime: data.lifeTime,
             };
 
-            const createAuctionResponse = await axios.post(BaseUrlLot + '/api/auction/create', auctionData, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                },
-            });
+            const createAuctionResponse = await axios.post(
+                BaseUrlLot + '/api/auction/create',
+                auctionData
+            );
 
             console.log('Auction created:', createAuctionResponse.data);
 
@@ -33,12 +28,10 @@ function NewAuctionForm() {
             const formData = new FormData();
             formData.append('image', data.image[0]);
 
-            const uploadImageResponse = await axios.post(BaseUrlLot + `/api/image/upload/${auctionId}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${token}`,
-                },
-            });
+            const uploadImageResponse = await axios.post(
+                BaseUrlLot + `/api/image/upload/${auctionId}`,
+                formData
+            );
 
             console.log('Image uploaded:', uploadImageResponse.data);
 
@@ -54,9 +47,9 @@ function NewAuctionForm() {
     };
 
     return (
-        <div>
+        <div className="new-auction-form-container">
             <h2>Create a New Auction</h2>
-            <form onSubmit={handleSubmit(handleNewAuctionSubmit)}>
+            <form className="new-auction-form" onSubmit={handleSubmit(handleNewAuctionSubmit)}>
                 <label>
                     Name:
                     <input type="text" {...register('name', { required: true })} />
@@ -81,7 +74,7 @@ function NewAuctionForm() {
                     Image:
                     <input type="file" onChange={handleImageChange} />
                 </label>
-                <button type="submit">Submit</button>
+                <button className="submit-button" type="submit">Submit</button>
             </form>
         </div>
     );

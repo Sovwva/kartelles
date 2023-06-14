@@ -17,9 +17,7 @@ const ProductTypeButtons = ({
                     <button
                         key={type}
                         className={
-                            selectedProductType === type
-                                ? 'product-type-button active'
-                                : 'product-type-button'
+                            selectedProductType === type ? 'product-type-button active' : 'product-type-button'
                         }
                         onClick={() => handleButtonClick(type)}
                     >

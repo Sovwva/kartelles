@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import axios from 'axios';
 
 function EditProfileForm() {
-    const { register, handleSubmit, setValue, reset } = useForm();
+    const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm();
     const [isDeleting, setIsDeleting] = useState(false);
     const [deleteConfirmation, setDeleteConfirmation] = useState(false);
 
@@ -11,9 +11,29 @@ function EditProfileForm() {
         return localStorage.getItem('accessToken');
     };
 
-    const handleEditProfileSubmit = (data) => {
-        // Отправка запроса на изменение профиля
-        console.log('Profile edited:', data);
+    const handleEditProfileSubmit = async (data) => {
+        if (Object.keys(errors).length > 0) {
+            // Если есть ошибки валидации, отказываем в обновлении
+            console.log('Validation error. Please fill in all fields.');
+            return;
+        }
+
+        try {
+            const token = getToken();
+            const config = {
+                headers: { Authorization: `Bearer ${token}` }
+            };
+
+            // Отправка запроса на сервер с обновленными данными профиля
+            const response = await axios.put('/api/user', data, config);
+            console.log(response.data); // Обработка успешного обновления профиля
+
+            // Дополнительные действия после успешного обновления профиля
+            // Например, обновление состояния компонента или отображение сообщения об успешном обновлении
+        } catch (error) {
+            console.error(error); // Обработка ошибок при редактировании профиля
+            // Дополнительные действия при возникновении ошибки, например, отображение сообщения об ошибке
+        }
     };
 
     const handleDeleteProfile = () => {
@@ -50,11 +70,13 @@ function EditProfileForm() {
             <form className="input_form" onSubmit={handleSubmit(handleEditProfileSubmit)}>
                 <label>
                     First Name:
-                    <input type="text" {...register('firstName', {})} />
+                    <input type="text" {...register('firstName', { required: true })} />
+                    {errors.firstName && <p className="error-message">First Name is required</p>}
                 </label>
                 <label>
                     Last Name:
-                    <input type="text" {...register('lastName', {})} />
+                    <input type="text" {...register('lastName', { required: true })} />
+                    {errors.lastName && <p className="error-message">Last Name is required</p>}
                 </label>
                 <button type="submit">Update</button>
             </form>

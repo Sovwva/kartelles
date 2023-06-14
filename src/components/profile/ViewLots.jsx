@@ -23,7 +23,7 @@ function ViewLots({ currentPage }) {
     const showButtons = currentPage === 'viewLots';
 
     return (
-        <div>
+        <div className="view-lots-container">
             <h2>View Lots</h2>
 
             <ProductTypeButtons
